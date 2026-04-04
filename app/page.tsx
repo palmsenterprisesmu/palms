@@ -10,6 +10,7 @@ import Reviews from '@/components/Reviews'
 import WhatsApp from '@/components/WhatsApp'
 import Footer from '@/components/Footer'
 import CartDrawer from '@/components/CartDrawer'
+import Contact from '@/components/Contact'
 
 // Replace with your actual WhatsApp number
 const WHATSAPP_NUMBER = '23058594941'
