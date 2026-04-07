@@ -29,10 +29,12 @@ export default function Reviews() {
           {reviews.map((r, i) => (
             <article key={i} className="bg-white rounded-[32px] p-8 relative overflow-hidden hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
               <div className={`absolute top-0 left-0 right-0 h-1 ${topColors[i]}`} />
-              <span className={`font-display text-7xl leading-none block mb-4 ${quoteColors[i]}`} style={{WebkitTextStroke:'2px currentColor',color:'transparent'}}>&#8220;</span>
+              <span className={`font-display text-7xl leading-none block mb-4 opacity-20 ${quoteColors[i]}`}>&#8220;</span>
               <p className="text-[0.95rem] leading-[1.75] text-navy-soft font-semibold mb-6">{r[lang]}</p>
               <div className="flex items-center gap-3">
-                <Image src={r.avatar} alt={r.name} width={44} height={44} className="rounded-full flex-shrink-0" />
+                <div className={`w-11 h-11 rounded-full flex-shrink-0 flex items-center justify-center text-white font-black text-sm ${['bg-rose','bg-blue','bg-green'][i]}`}>
+  {r.name.split(' ').map(n => n[0]).join('')}
+</div>
                 <div>
                   <div className={`text-sm tracking-wide mb-0.5 ${starColors[i]}`}>{'★'.repeat(r.stars)}</div>
                   <div className="font-black text-sm text-navy">{r.name}</div>

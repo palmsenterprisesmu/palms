@@ -3,12 +3,12 @@ import Image from 'next/image'
 import { useLang } from '@/lib/LanguageContext'
 
 const images = [
-  { src:'/images/instagram/Sunshine insta-02.webp',         alt:'Palms Mauritius sunshine tee' },
-  { src:'/images/instagram/Begoodshirt pink insta-12.webp', alt:'Be Good shirt in pink' },
-  { src:'/images/instagram/Lemorne insta10.webp',           alt:'Le Morne Mauritius vibes' },
-  { src:'/images/instagram/Roarsome tote insta-11.webp',    alt:'Roarsome tote bag' },
-  { src:'/images/instagram/Begood sticker-23.webp',         alt:'Be Good sticker close up' },
-  { src:'/images/instagram/Youniqueshirt insta-04.webp',    alt:'Younique shirt lifestyle shot' },
+  { src: '/images/instagram/Sunshine-insta-02.webp',        alt: 'Palms Mauritius sunshine tee' },
+  { src: '/images/instagram/Begoodshirt-pink-insta-12.webp', alt: 'Be Good shirt in pink' },
+  { src: '/images/instagram/Lemorne-insta10.webp',           alt: 'Le Morne Mauritius vibes' },
+  { src: '/images/instagram/Roarsome-tote-insta-11.webp',   alt: 'Roarsome tote bag' },
+  { src: '/images/instagram/Begood-sticker-23.webp',         alt: 'Be Good sticker close up' },
+  { src: '/images/instagram/Youniqueshirt-insta-04.webp',    alt: 'Younique shirt lifestyle shot' },
 ]
 
 const overlayColors = ['bg-rose/55','bg-blue/55','bg-gold/55','bg-green/55','bg-rose/50','bg-blue/50']
