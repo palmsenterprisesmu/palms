@@ -74,7 +74,7 @@ export default function Hero() {
           <div className="relative max-w-[420px] mx-auto w-full hidden sm:block">
             <div className="relative rounded-[32px] lg:rounded-[48px] overflow-hidden aspect-[4/5] shadow-2xl">
               <Image
-                src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=900&q=80"
+                src="/images/hero/Hero-01.webp"
                 alt="Person wearing a Palms Mauritius t-shirt"
                 fill className="object-cover" sizes="(max-width:1024px) 420px, 500px" priority />
               <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-rose via-blue to-green" />

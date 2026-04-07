@@ -9,21 +9,21 @@ type Step = 'cart' | 'checkout' | 'success'
 export default function CartDrawer() {
   const { items, removeItem, updateQty, totalPrice, totalItems, isOpen, closeCart, clearCart } = useCart()
   const { lang } = useLang()
-  const [step, setStep] = useState<Step>('cart')
+  const [step, setStep]       = useState<Step>('cart')
   const [loading, setLoading] = useState(false)
-  const [form, setForm] = useState({ name:'', email:'', phone:'', address:'', paymentMethod:'cash', notes:'' })
+  const [form, setForm]       = useState({ name: '', email: '', phone: '', address: '', paymentMethod: 'cash', notes: '' })
 
   const labels = {
-    title:      { en:'Your Bag',        fr:'Votre Sac',        de:'Dein Beutel'        },
-    checkout:   { en:'Checkout →',      fr:'Commander →',      de:'Zur Kasse →'        },
-    clear:      { en:'Clear bag',       fr:'Vider le sac',     de:'Beutel leeren'      },
-    continue:   { en:'Continue Shopping',fr:'Continuer',       de:'Weiter einkaufen'   },
-    empty:      { en:'Your bag is empty 🌴', fr:'Votre sac est vide 🌴', de:'Dein Beutel ist leer 🌴' },
-    total:      { en:'Total',           fr:'Total',            de:'Gesamt'             },
-    placeOrder: { en:'Place Order 🌴',  fr:'Passer la commande 🌴', de:'Bestellen 🌴' },
-    back:       { en:'← Back to bag',   fr:'← Retour au sac',  de:'← Zurück'          },
-    success:    { en:'Order placed! 🎉', fr:'Commande reçue ! 🎉', de:'Bestellung aufgegeben! 🎉' },
-    successSub: { en:"We'll be in touch soon to arrange delivery.", fr:'Nous vous contacterons bientôt.', de:'Wir melden uns bald bei dir.' },
+    title:      { en: 'Your Bag',             fr: 'Votre Sac',              de: 'Dein Beutel'          },
+    checkout:   { en: 'Checkout →',           fr: 'Commander →',            de: 'Zur Kasse →'          },
+    clear:      { en: 'Clear bag',            fr: 'Vider le sac',           de: 'Beutel leeren'        },
+    continue:   { en: 'Continue Shopping',    fr: 'Continuer',              de: 'Weiter einkaufen'     },
+    empty:      { en: 'Your bag is empty 🌴', fr: 'Votre sac est vide 🌴', de: 'Dein Beutel ist leer 🌴' },
+    total:      { en: 'Total',                fr: 'Total',                  de: 'Gesamt'               },
+    placeOrder: { en: 'Place Order 🌴',       fr: 'Passer la commande 🌴', de: 'Bestellen 🌴'         },
+    back:       { en: '← Back to bag',        fr: '← Retour au sac',       de: '← Zurück'             },
+    success:    { en: 'Order placed! 🎉',     fr: 'Commande reçue ! 🎉',   de: 'Bestellung aufgegeben! 🎉' },
+    successSub: { en: "We'll be in touch soon to arrange delivery.", fr: 'Nous vous contacterons bientôt.', de: 'Wir melden uns bald bei dir.' },
   }
 
   const handleOrder = async (e: React.FormEvent) => {
@@ -35,7 +35,16 @@ export default function CartDrawer() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
-          items: items.map(i => ({ name: i.product.nameEn, quantity: i.quantity, price: i.product.price })),
+          // ─── SHOPIFY HOOK ─────────────────────────────────────────────────
+          // Replace with Shopify cartLinesAdd mutation using variantKey as variantId
+          // ──────────────────────────────────────────────────────────────────
+          items: items.map(i => ({
+            name:     i.product.nameEn,
+            colour:   i.colour,
+            size:     i.size,
+            quantity: i.quantity,
+            price:    i.product.price,
+          })),
           total: totalPrice,
         }),
       })
@@ -63,14 +72,18 @@ export default function CartDrawer() {
         <div className="flex items-center justify-between px-6 py-5 border-b border-navy/10">
           <div>
             <h2 className="font-display text-2xl text-navy">{labels.title[lang]}</h2>
-            {totalItems > 0 && step === 'cart' && <p className="text-xs font-bold text-slate">{totalItems} {totalItems === 1 ? 'item' : 'items'}</p>}
+            {totalItems > 0 && step === 'cart' && (
+              <p className="text-xs font-bold text-slate">{totalItems} {totalItems === 1 ? 'item' : 'items'}</p>
+            )}
           </div>
           <button onClick={() => { closeCart(); setTimeout(() => setStep('cart'), 300) }}
             className="w-10 h-10 rounded-full bg-navy/10 flex items-center justify-center text-navy hover:bg-rose hover:text-white transition-all text-lg">✕</button>
         </div>
-        <div className="grid grid-cols-4 h-1"><span className="bg-rose"/><span className="bg-blue"/><span className="bg-gold"/><span className="bg-green"/></div>
+        <div className="grid grid-cols-4 h-1">
+          <span className="bg-rose" /><span className="bg-blue" /><span className="bg-gold" /><span className="bg-green" />
+        </div>
 
-        {/* STEP: Cart */}
+        {/* ── STEP: Cart ──────────────────────────────────────────────────── */}
         {step === 'cart' && (
           <>
             <div className="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-4">
@@ -82,21 +95,31 @@ export default function CartDrawer() {
                     {labels.continue[lang]}
                   </button>
                 </div>
-              ) : items.map(({ product: p, quantity }) => {
-                const name = lang === 'fr' ? p.nameFr : lang === 'de' ? p.nameDe : p.nameEn
+              ) : items.map(({ product: p, quantity, colour, size, variantKey }) => {
+                const name       = lang === 'fr' ? p.nameFr : lang === 'de' ? p.nameDe : p.nameEn
+                const colourName = colour ? p.colours?.find(c => c.key === colour)?.label ?? colour : null
                 return (
-                  <div key={p.id} className="flex gap-4 bg-white rounded-2xl p-4 shadow-sm">
+                  <div key={variantKey} className="flex gap-4 bg-white rounded-2xl p-4 shadow-sm">
                     <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-sand">
                       <Image src={p.img} alt={p.altEn} fill className="object-cover" sizes="80px" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-black text-navy text-sm leading-tight mb-1 truncate">{name}</p>
+                      <p className="font-black text-navy text-sm leading-tight mb-0.5 truncate">{name}</p>
+                      {/* Variant label */}
+                      {(colourName || size) && (
+                        <p className="text-[0.7rem] font-bold text-slate mb-1">
+                          {[colourName, size].filter(Boolean).join(' · ')}
+                        </p>
+                      )}
                       <p className="font-display text-navy">Rs {(p.price * quantity).toLocaleString()}</p>
                       <div className="flex items-center gap-2 mt-2">
-                        <button onClick={() => updateQty(p.id, quantity - 1)} className="w-7 h-7 rounded-full bg-navy/10 text-navy font-black flex items-center justify-center hover:bg-rose hover:text-white transition-all text-sm">−</button>
+                        <button onClick={() => updateQty(variantKey, quantity - 1)}
+                          className="w-7 h-7 rounded-full bg-navy/10 text-navy font-black flex items-center justify-center hover:bg-rose hover:text-white transition-all text-sm">−</button>
                         <span className="font-black text-navy text-sm w-5 text-center">{quantity}</span>
-                        <button onClick={() => updateQty(p.id, quantity + 1)} className="w-7 h-7 rounded-full bg-navy/10 text-navy font-black flex items-center justify-center hover:bg-green hover:text-white transition-all text-sm">+</button>
-                        <button onClick={() => removeItem(p.id)} className="ml-auto text-slate hover:text-rose transition-colors text-xs font-bold">✕</button>
+                        <button onClick={() => updateQty(variantKey, quantity + 1)}
+                          className="w-7 h-7 rounded-full bg-navy/10 text-navy font-black flex items-center justify-center hover:bg-green hover:text-white transition-all text-sm">+</button>
+                        <button onClick={() => removeItem(variantKey)}
+                          className="ml-auto text-slate hover:text-rose transition-colors text-xs font-bold">✕</button>
                       </div>
                     </div>
                   </div>
@@ -121,45 +144,49 @@ export default function CartDrawer() {
           </>
         )}
 
-        {/* STEP: Checkout form */}
+        {/* ── STEP: Checkout form ─────────────────────────────────────────── */}
         {step === 'checkout' && (
           <form onSubmit={handleOrder} className="flex-1 overflow-y-auto flex flex-col">
             <div className="flex-1 px-6 py-4 flex flex-col gap-4">
               <button type="button" onClick={() => setStep('cart')} className="text-xs font-black text-slate hover:text-navy transition-colors text-left">
                 {labels.back[lang]}
               </button>
-
               <div>
-                <label className={labelCls}>{{ en:'Name', fr:'Prénom', de:'Name' }[lang]}</label>
-                <input required className={inputCls} value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))} placeholder="Your full name" />
+                <label className={labelCls}>{{ en: 'Name', fr: 'Prénom', de: 'Name' }[lang]}</label>
+                <input required className={inputCls} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Your full name" />
               </div>
               <div>
                 <label className={labelCls}>Email</label>
-                <input required type="email" className={inputCls} value={form.email} onChange={e => setForm(f => ({...f, email: e.target.value}))} placeholder="your@email.com" />
+                <input required type="email" className={inputCls} value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} placeholder="your@email.com" />
               </div>
               <div>
-                <label className={labelCls}>{{ en:'Phone / WhatsApp', fr:'Téléphone / WhatsApp', de:'Telefon / WhatsApp' }[lang]}</label>
-                <input required className={inputCls} value={form.phone} onChange={e => setForm(f => ({...f, phone: e.target.value}))} placeholder="+230 5xxx xxxx" />
+                <label className={labelCls}>{{ en: 'Phone / WhatsApp', fr: 'Téléphone / WhatsApp', de: 'Telefon / WhatsApp' }[lang]}</label>
+                <input required className={inputCls} value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="+230 5xxx xxxx" />
               </div>
               <div>
-                <label className={labelCls}>{{ en:'Delivery Address', fr:'Adresse de livraison', de:'Lieferadresse' }[lang]}</label>
-                <textarea required className={`${inputCls} resize-none h-20`} value={form.address} onChange={e => setForm(f => ({...f, address: e.target.value}))} placeholder="Street, Town, District" />
+                <label className={labelCls}>{{ en: 'Delivery Address', fr: 'Adresse de livraison', de: 'Lieferadresse' }[lang]}</label>
+                <textarea required className={`${inputCls} resize-none h-20`} value={form.address} onChange={e => setForm(f => ({ ...f, address: e.target.value }))} placeholder="Street, Town, District" />
               </div>
               <div>
-                <label className={labelCls}>{{ en:'Payment Method', fr:'Mode de paiement', de:'Zahlungsmethode' }[lang]}</label>
+                <label className={labelCls}>{{ en: 'Payment Method', fr: 'Mode de paiement', de: 'Zahlungsmethode' }[lang]}</label>
                 <div className="flex gap-2">
-                  {[{ key:'cash', en:'💵 Cash', fr:'💵 Espèces', de:'💵 Bargeld' }, { key:'mcbjuice', en:'📱 MCB Juice', fr:'📱 MCB Juice', de:'📱 MCB Juice' }].map(opt => (
+                  {[
+                    { key: 'cash',     en: '💵 Cash',      fr: '💵 Espèces', de: '💵 Bargeld'  },
+                    { key: 'mcbjuice', en: '📱 MCB Juice', fr: '📱 MCB Juice', de: '📱 MCB Juice' },
+                  ].map(opt => (
                     <button key={opt.key} type="button"
-                      onClick={() => setForm(f => ({...f, paymentMethod: opt.key}))}
+                      onClick={() => setForm(f => ({ ...f, paymentMethod: opt.key }))}
                       className={`flex-1 py-3 rounded-2xl text-sm font-black border-2 transition-all ${form.paymentMethod === opt.key ? 'border-rose bg-rose-pale text-rose' : 'border-navy/10 text-slate hover:border-navy/30'}`}>
-                      {opt[lang]}
+                      {opt[lang as keyof typeof opt]}
                     </button>
                   ))}
                 </div>
               </div>
               <div>
-                <label className={labelCls}>{{ en:'Notes (optional)', fr:'Notes (optionnel)', de:'Notizen (optional)' }[lang]}</label>
-                <textarea className={`${inputCls} resize-none h-16`} value={form.notes} onChange={e => setForm(f => ({...f, notes: e.target.value}))} placeholder={{ en:'Size preferences, special requests...', fr:'Préférences de taille, demandes spéciales...', de:'Größenwünsche, Sonderwünsche...' }[lang]} />
+                <label className={labelCls}>{{ en: 'Notes (optional)', fr: 'Notes (optionnel)', de: 'Notizen (optional)' }[lang]}</label>
+                <textarea className={`${inputCls} resize-none h-16`} value={form.notes}
+                  onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
+                  placeholder={{ en: 'Any special requests...', fr: 'Demandes spéciales...', de: 'Sonderwünsche...' }[lang]} />
               </div>
             </div>
 
@@ -176,7 +203,7 @@ export default function CartDrawer() {
           </form>
         )}
 
-        {/* STEP: Success */}
+        {/* ── STEP: Success ───────────────────────────────────────────────── */}
         {step === 'success' && (
           <div className="flex-1 flex flex-col items-center justify-center text-center px-8 gap-5">
             <span className="text-7xl">🎉</span>

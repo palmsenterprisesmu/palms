@@ -3,12 +3,12 @@ import Image from 'next/image'
 import { useLang } from '@/lib/LanguageContext'
 
 const images = [
-  { src:'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=400&q=80', alt:'Palms tee on beach' },
-  { src:'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=400&q=80',    alt:'Palms collection flat lay' },
-  { src:'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=400&q=80', alt:'Good Vibes tee outdoors' },
-  { src:'https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?w=400&q=80', alt:'Palms tote at beach' },
-  { src:'https://images.unsplash.com/photo-1509942774463-acf339cf87d5?w=400&q=80',    alt:'Palms hoodie at sunset' },
-  { src:'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&q=80', alt:'Palms cap on beach' },
+  { src:'/images/instagram/Sunshine insta-02.webp',         alt:'Palms Mauritius sunshine tee' },
+  { src:'/images/instagram/Begoodshirt pink insta-12.webp', alt:'Be Good shirt in pink' },
+  { src:'/images/instagram/Lemorne insta10.webp',           alt:'Le Morne Mauritius vibes' },
+  { src:'/images/instagram/Roarsome tote insta-11.webp',    alt:'Roarsome tote bag' },
+  { src:'/images/instagram/Begood sticker-23.webp',         alt:'Be Good sticker close up' },
+  { src:'/images/instagram/Youniqueshirt insta-04.webp',    alt:'Younique shirt lifestyle shot' },
 ]
 
 const overlayColors = ['bg-rose/55','bg-blue/55','bg-gold/55','bg-green/55','bg-rose/50','bg-blue/50']
