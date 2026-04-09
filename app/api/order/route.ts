@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
     // 2. Email to you
     await resend.emails.send({
-      from: 'Palms Mauritius Orders <orders@palmsmauritius.com>',
+      from: 'Palms Mauritius Orders <noreply@palmsmauritius.com>',
       to: process.env.YOUR_EMAIL!,
       subject: `🛍️ New Order — ${name} — Rs ${total.toLocaleString()}`,
       html: `
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
 
     // 3. Confirmation email to customer
     await resend.emails.send({
-      from: 'Palms Mauritius <hello@palmsmauritius.com>',
+      from: 'Palms Mauritius <noreply@palmsmauritius.com>',
       to: email,
       subject: '🌴 Your Palms Mauritius order is confirmed!',
       html: `
