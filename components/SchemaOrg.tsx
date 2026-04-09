@@ -1,18 +1,20 @@
 import { products } from '@/lib/products'
 
+const SITE_URL = 'https://palmsmauritius.com'
+
 export default function SchemaOrg() {
   const storeSchema = {
     '@context': 'https://schema.org',
     '@type': 'OnlineStore',
     name: 'Palms Mauritius',
     description: '100% Mauritius-made positive wear. T-shirts, caps, hoodies, tote bags and gifts.',
-    url: 'https://palmsmauritius.com',
-    logo: 'https://palmsmauritius.com/palms-logo.png',
+    url: SITE_URL,
+    logo: `${SITE_URL}/palms-logo.png`,
     sameAs: ['https://www.instagram.com/palmsmauritius'],
     address: { '@type': 'PostalAddress', addressCountry: 'MU' },
     currenciesAccepted: 'MUR',
     knowsLanguage: ['en', 'fr', 'de'],
-    priceRange: 'Rs 150 - Rs 1200',
+    priceRange: 'Rs 300 - Rs 1800',
   }
 
   const productListSchema = {
@@ -26,7 +28,8 @@ export default function SchemaOrg() {
         '@type': 'Product',
         name: p.nameEn,
         description: p.descEn,
-        image: p.img,
+        // Absolute URL required by Google for image indexing
+        image: `${SITE_URL}${p.img}`,
         brand: { '@type': 'Brand', name: 'Palms Mauritius' },
         offers: {
           '@type': 'Offer',
@@ -43,8 +46,8 @@ export default function SchemaOrg() {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://palmsmauritius.com' },
-      { '@type': 'ListItem', position: 2, name: 'Shop', item: 'https://palmsmauritius.com/#shop' },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Shop', item: `${SITE_URL}/#shop` },
     ],
   }
 
